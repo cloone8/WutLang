@@ -1,0 +1,55 @@
+[workspace]
+resolver = "3"
+members = ["wlangc"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.89"
+authors = ["Wouter de Bruijn <wouter@wutru.io>"]
+homepage = "https://github.com/cloone8/WutLang"
+repository = "https://github.com/cloone8/WutLang"
+license = "MPL-2.0"
+keywords = []
+categories = []
+
+[workspace.dependencies]
+### Workspace dependencies ###
+
+### External dependencies ###
+log = { version = "0.4" }
+simplelog = { version = "0.12" }
+thiserror = { version = "2.0" }
+cfg-if = { version = "1.0.1" }
+derive_more = { version = "2" }
+
+nohash-hasher = { version = "0.2" }
+clap = { version = "4.5", features = ["derive"] }
+chumsky = { version = "0.10", features = [
+    "regex",
+    "lexical-numbers",
+    "memoization",
+] }
+ariadne = { version = "0.5" }
+
+[profile.release]
+strip = true
+lto = true
+codegen-units = 1
+panic = "abort"
+
+# The profile that 'dist' will build with
+[profile.dist]
+inherits = "release"
+
+[workspace.lints.rust]
+missing_docs = "warn"
+unsafe_op_in_unsafe_fn = "warn"
+unreachable_pub = "warn"
+
+[workspace.lints.clippy]
+missing_docs_in_private_items = "warn"
+missing_assert_messages = "warn"
+allow_attributes_without_reason = "warn"
+std_instead_of_core = "warn"
+cargo = "warn"

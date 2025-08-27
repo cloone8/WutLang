@@ -1,0 +1,7 @@
+
+function my_func(): void {
+    int a = 5;
+    int b = 6;
+
+    int c = a + b;
+}
