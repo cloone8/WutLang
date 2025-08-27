@@ -2,11 +2,17 @@
 
 use std::path::PathBuf;
 
+use ariadne::{Label, Report, Source};
+use chumsky::Parser;
+use clap::ValueEnum;
 use clap::builder::Styles;
 use clap::builder::styling::{AnsiColor, Effects, Style};
-use clap::{Parser, ValueEnum};
 use log::LevelFilter;
 use simplelog::Config;
+
+use crate::parser::SourceFile;
+
+mod parser;
 
 // Styling for clap CLI
 
@@ -106,7 +112,7 @@ impl From<LogLevel> for LevelFilter {
 }
 
 fn main() {
-    let args = CliArgs::parse();
+    let args = <CliArgs as clap::Parser>::parse();
 
     if let Err(e) = simplelog::TermLogger::init(
         args.verbosity.into(),
@@ -129,4 +135,36 @@ fn main() {
         args.input.to_string_lossy(),
         output_file.to_string_lossy()
     );
+
+    let file_content = match std::fs::read_to_string(&args.input) {
+        Ok(f) => f,
+        Err(e) => {
+            log::error!("Failed to read input file due to: {e}");
+            return;
+        }
+    };
+
+    let parsed = match SourceFile::parser().parse(&file_content).into_result() {
+        Ok(parsed) => parsed,
+        Err(errs) => {
+            for err in errs {
+                Report::build(
+                    ariadne::ReportKind::Error,
+                    (args.input.to_string_lossy(), err.span().into_range()),
+                )
+                .with_code(1)
+                .with_label(
+                    Label::new((args.input.to_string_lossy(), err.span().into_range()))
+                        .with_message(err.reason()),
+                )
+                .finish()
+                .print((args.input.to_string_lossy(), Source::from(&file_content)))
+                .unwrap();
+            }
+
+            return;
+        }
+    };
+
+    dbg!(parsed);
 }

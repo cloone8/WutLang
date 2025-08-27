@@ -1,5 +1,5 @@
 [package]
-name = "wlangc"
+name = "wlang_il"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -11,13 +11,6 @@ keywords.workspace = true
 categories.workspace = true
 
 [dependencies]
-wlang_il.workspace = true
-log.workspace = true
-simplelog.workspace = true
-chumsky.workspace = true
-ariadne.workspace = true
-thiserror.workspace = true
-clap.workspace = true
 
 [lints]
 workspace = true
