@@ -18,6 +18,7 @@ chumsky.workspace = true
 ariadne.workspace = true
 thiserror.workspace = true
 clap.workspace = true
+profiling.workspace = true
 
 [lints]
 workspace = true

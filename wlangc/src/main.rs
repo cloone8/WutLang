@@ -144,27 +144,31 @@ fn main() {
         }
     };
 
-    let parsed = match SourceFile::parser().parse(&file_content).into_result() {
-        Ok(parsed) => parsed,
-        Err(errs) => {
-            for err in errs {
-                Report::build(
-                    ariadne::ReportKind::Error,
-                    (args.input.to_string_lossy(), err.span().into_range()),
-                )
-                .with_code(1)
-                .with_label(
-                    Label::new((args.input.to_string_lossy(), err.span().into_range()))
-                        .with_message(err.reason()),
-                )
-                .finish()
-                .print((args.input.to_string_lossy(), Source::from(&file_content)))
-                .unwrap();
-            }
+    let parsed = {
+        profiling::scope!("Parse");
 
-            return;
+        match SourceFile::parser().parse(&file_content).into_result() {
+            Ok(parsed) => parsed,
+            Err(errs) => {
+                for err in errs {
+                    Report::build(
+                        ariadne::ReportKind::Error,
+                        (args.input.to_string_lossy(), err.span().into_range()),
+                    )
+                    .with_code(1)
+                    .with_label(
+                        Label::new((args.input.to_string_lossy(), err.span().into_range()))
+                            .with_message(err.reason()),
+                    )
+                    .finish()
+                    .print((args.input.to_string_lossy(), Source::from(&file_content)))
+                    .unwrap();
+                }
+
+                return;
+            }
         }
     };
 
-    dbg!(parsed);
+    println!("{}", parsed.dump());
 }

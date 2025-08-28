@@ -1,7 +1,39 @@
+function empty(): void {{{{{}}}}}
 
 function my_func(): void {
     int a = 5;
     int b = 6;
 
-    int c = a + b;
+    int c = a + -b;
+
+    int d = c + cool_add(a, b);
+
+    while(true) {
+
+    }
+
+    for(bool t = false; t < 5; t + t) {
+        a + b;
+    }
+
+    return;
+}
+
+function cool_add(int x, int y): int {
+    int z = x + (y + 6) / 8 - 8 * 7;
+
+    bool lol = (true + false || false && !true) == 5;
+
+    if(a == 5){
+        int a = 5;
+        
+        if(a == 0){
+        } else {
+            a;
+        }
+
+        int c = a + -b;
+    }
+
+    return z;
 }
